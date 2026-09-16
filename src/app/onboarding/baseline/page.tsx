@@ -107,6 +107,13 @@ export default function BaselinePage() {
       if (result.length > 0) {
         setHistory(result);
         setShowSummary(true);
+        // Reaching here on a device where the local onboarding flag was
+        // never set (new device, cleared storage, pre-dates per-user
+        // scoping) would otherwise trap AppGuard in a redirect loop: it
+        // keeps bouncing back here since `completed` never got flipped.
+        // Baseline history existing at all means onboarding already
+        // finished, so reconcile the local flag now.
+        completeOnboarding();
       }
     };
 
